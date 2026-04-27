@@ -1,0 +1,19 @@
+# Copy to hosts.yaml and edit. Each entry becomes a row in `hosts`.
+#
+# - addr:  what we ssh to (hostname, IP, or ssh_config alias)
+# - user:  ssh user (must have passwordless sudo on the target)
+# - label: optional friendly name stored alongside the host
+#
+# Anything you put in your ~/.ssh/config (Host blocks, ProxyJump, IdentityFile)
+# applies — we just shell out to `ssh`.
+
+hosts:
+  - addr: nas01.lan
+    user: mj
+    label: nas01
+  - addr: 10.0.0.21
+    user: mj
+    label: compute01
+  - addr: pi.lan
+    user: pi
+    label: pi4
