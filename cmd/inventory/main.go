@@ -196,11 +196,18 @@ func runRemote(h HostEntry, script []byte, timeout time.Duration) ([]byte, error
 	if h.User != "" {
 		target = h.User + "@" + h.Addr
 	}
+	// Skip sudo when the SSH user is already root: it's redundant, and on some
+	// systems (TrueNAS) sudo's PAM session imposes resource limits that kill
+	// longer-running scripts even though `sudo -n true` works fine.
+	remoteCmd := "sudo -n bash -s"
+	if h.User == "root" {
+		remoteCmd = "bash -s"
+	}
 	cmd := exec.CommandContext(ctx, "ssh",
 		"-o", "BatchMode=yes",
 		"-o", "ConnectTimeout=10",
 		target,
-		"sudo -n bash -s",
+		remoteCmd,
 	)
 	cmd.Stdin = strings.NewReader(string(script))
 	var stderr strings.Builder
